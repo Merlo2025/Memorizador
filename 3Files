@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Memoriza Hardcore</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>🧠 Memoriza Hardcore</h1>
+
+    <section id="setup">
+      <label for="textoOriginal">1) Escribe el texto que quieres memorizar:</label>
+      <textarea id="textoOriginal" placeholder="Escribe aquí tu texto..." rows="6"></textarea>
+      <div class="controls">
+        <label><input type="checkbox" id="modoEstricto" checked /> Reiniciar al primer error</label>
+        <button id="empezarBtn">Empezar</button>
+      </div>
+    </section>
+
+    <section id="juego" class="oculto">
+      <p id="textoMeta" class="texto-meta"></p>
+      <label for="entrada">2) Escribe el texto de memoria:</label>
+      <textarea id="entrada" rows="6" placeholder="Empieza a escribir..." autocomplete="off"></textarea>
+      <p id="mensaje"></p>
+      <div class="controls">
+        <button id="reiniciarBtn">Reiniciar</button>
+        <button id="volverBtn">Volver</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+const empezarBtn = document.getElementById("empezarBtn");
+const textoOriginal = document.getElementById("textoOriginal");
+const modoEstrictoCheckbox = document.getElementById("modoEstricto");
+const setup = document.getElementById("setup");
+
+const juego = document.getElementById("juego");
+const textoMeta = document.getElementById("textoMeta");
+const entrada = document.getElementById("entrada");
+const mensaje = document.getElementById("mensaje");
+const reiniciarBtn = document.getElementById("reiniciarBtn");
+const volverBtn = document.getElementById("volverBtn");
+
+let meta = "";
+
+empezarBtn.addEventListener("click", () => {
+  meta = textoOriginal.value.trim();
+  if (meta === "") {
+    alert("Escribe un texto primero.");
+    return;
+  }
+
+  setup.classList.add("oculto");
+  juego.classList.remove("oculto");
+  textoMeta.textContent = meta;
+  entrada.value = "";
+  mensaje.textContent = "";
+  entrada.focus();
+});
+
+entrada.addEventListener("input", () => {
+  const texto = entrada.value;
+  const correcto = meta.startsWith(texto);
+
+  if (!correcto) {
+    if (modoEstrictoCheckbox.checked) {
+      mensaje.textContent = "❌ Error. Reiniciando...";
+      entrada.value = "";
+      setTimeout(() => (mensaje.textContent = ""), 800);
+    } else {
+      mensaje.textContent = "⚠️ Hay un error, revisa.";
+    }
+  } else if (texto === meta) {
+    mensaje.textContent = "🎉 ¡Perfecto! Lo memorizaste sin errores.";
+  } else {
+    mensaje.textContent = "";
+  }
+});
+
+reiniciarBtn.addEventListener("click", () => {
+  entrada.value = "";
+  mensaje.textContent = "";
+  entrada.focus();
+});
+
+volverBtn.addEventListener("click", () => {
+  juego.classList.add("oculto");
+  setup.classList.remove("oculto");
+});
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  width: 90%;
+  max-width: 600px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+}
+
+button {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #3730a3;
+}
+
+.oculto {
+  display: none;
+}
+
+.texto-meta {
+  background: #f9fafb;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px dashed #ccc;
+}
+
+#mensaje {
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: center;
+}

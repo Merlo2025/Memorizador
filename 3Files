@@ -8,7 +8,7 @@
 </head>
 <body>
   <main class="container">
-    <h1>🧠 Memoriza Hardcore</h1>
+    <h1>🧠 Memorizar textos</h1>
 
     <section id="setup">
       <label for="textoOriginal">1) Escribe el texto que quieres memorizar:</label>
